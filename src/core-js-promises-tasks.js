@@ -83,8 +83,16 @@ function getFirstResolvedPromiseResult(promises) {
  * [promise3, promise6, promise2] => Promise rejected with 2
  * [promise3, promise4, promise6] => Promise rejected with 6
  */
-async function getFirstPromiseResult(promises) {
-  return Promise.race([...promises]).finally();
+function getFirstPromiseResult(promises) {
+  return new Promise((resolve, reject) => {
+    Promise.race(promises)
+      .then((value) => {
+        resolve(value);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 /**
